@@ -1,8 +1,7 @@
 const router = require("express").Router();
 const passport = require("passport");
 
-const CLIENT_URL = "http://localhost:3000";
-const CLIENT_URL1 = "http://localhost:3000/chats";
+const CLIENT_URL = "http://localhost:3000/poster";
 
 router.get("/login/success", (req, res) => {
   if (req.user) {
@@ -10,7 +9,7 @@ router.get("/login/success", (req, res) => {
       success: true,
       message: "successfull",
       user: req.user,
-   //  cookies: req.cookies,
+      //  cookies: req.cookies,
     });
   }
 });

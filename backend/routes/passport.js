@@ -4,8 +4,8 @@ const User = require("../models/userModel");
 
 const findOrCreate = require("mongoose-findorcreate");
 const GOOGLE_CLIENT_ID =
-  "824812962911-3k4hhdf0sq3rlv458aghhd3j423v0kd4.apps.googleusercontent.com";
-const GOOGLE_CLIENT_SECRET = "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";
+  "242805264111-9e1dvcju56d87bvp5qmlndh6s4ffikb4.apps.googleusercontent.com";
+const GOOGLE_CLIENT_SECRET = "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";
 
 passport.use(
   new GoogleStrategy(

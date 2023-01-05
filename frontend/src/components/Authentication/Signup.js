@@ -21,9 +21,6 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const history = useHistory();
-  const axiosInstance = axios.create({
-    baseURL: process.env.REACT_APP_API_URL,
-  });
 
   const handleClick = () => {
     setShow(!show);
@@ -106,8 +103,8 @@ const Signup = () => {
           "Content-Type": "application/json",
         },
       };
-      const { data } = await axiosInstance.post(
-        "/user",
+      const { data } = await axios.post(
+        "/api/user",
         { name, email, password, pic },
         config
       );

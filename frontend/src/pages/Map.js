@@ -86,9 +86,6 @@ function Map() {
   const [latitude, setLatitude] = useState(null);
 
   const { poster, setPoster } = ChatState();
-  const axiosInstance = axios.create({
-    baseURL: process.env.REACT_APP_API_URL,
-  });
 
   const history = useHistory();
 
@@ -175,7 +172,7 @@ function Map() {
     };
 
     try {
-      const res = await axiosInstance.post("/pins", newPin);
+      const res = await axios.post("/api/pins", newPin);
       setPins([...pins, res.data]);
       setNewPlace(null);
     } catch (err) {
@@ -225,7 +222,7 @@ function Map() {
   useEffect(() => {
     const getPins = async () => {
       try {
-        const allPins = await axiosInstance.get("/pins");
+        const allPins = await axios.get("/api/pins");
         setPins(allPins.data);
       } catch (err) {
         console.log(err);
