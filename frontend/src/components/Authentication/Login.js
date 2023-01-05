@@ -122,6 +122,7 @@ const Login = ({ setonClick1 }) => {
         }
         popup.close();
       };
+      //uujjhmh
     }
   };
   // const google = async () => {
