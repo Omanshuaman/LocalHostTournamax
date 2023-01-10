@@ -15,6 +15,16 @@ import {
   AlertTitle,
   AlertDescription,
 } from "@chakra-ui/react";
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputRightElement,
+  VStack,
+  useToast,
+} from "@chakra-ui/react";
 import { Pagination } from "swiper";
 import {
   Drawer,
@@ -32,10 +42,8 @@ import {
   ModalContent,
   ModalBody,
   ModalCloseButton,
-  Button,
   useDisclosure,
   ModalHeader,
-  Input,
   ModalFooter,
   List,
   Select,
@@ -82,10 +90,13 @@ function Map() {
   const [currentCardId, setCurrentCard] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [currentSlide, setCurrentSlide] = useState([]);
+  const [currentSlideId, setCurrentSlideId] = useState([]);
+
   const [longitude, setLongitude] = useState(null);
   const [latitude, setLatitude] = useState(null);
-
-  const { poster, setPoster } = ChatState();
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
+  const [pic, setPic] = useState();
 
   const history = useHistory();
 
@@ -113,25 +124,23 @@ function Map() {
     onOpen: onLoginOpen,
     onClose: onLoginClose,
   } = useDisclosure();
+
   const {
     isOpen: isPhotoOpen,
     onOpen: onPhotoOpen,
     onClose: onPhotoClose,
   } = useDisclosure();
+
   const {
     isOpen: isDrawerOpen,
     onOpen: onDrawerOpen,
     onClose: onDrawerClose,
   } = useDisclosure();
+
   const btnRef = React.useRef();
   const handleMarkerClick = (id, lat, long, child) => {
     setCurrentPlaceId(id);
-    // setViewport({
-    //   ...viewport,
-    //   latitude: lat,
-    //   longitude: long,
-    // });
-    // console.log(Object.values(pins)[0].long);
+
     console.log(child);
     if (ref.current !== null && ref.current.swiper !== null) {
       ref.current.swiper.slideTo(child);
@@ -208,12 +217,54 @@ function Map() {
     document.getElementById("mySidenav1").style.width = "0";
     document.getElementById("mySidenav2").style.width = "0";
   }
+  const postDetails = (pics) => {
+    setLoading(true);
+    if (pics === undefined) {
+      toast({
+        title: "Please select an Image.",
+        // description: "We've created your account for you.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
 
-  const openNav3 = (id) => {
-    setCurrentPlaceId(id);
-
-    document.getElementById("mySidenav3").style.width = "450px";
-    console.log("dv");
+    if (pics.type === "image/jpeg" || pics.type === "image/png") {
+      const data = new FormData();
+      data.append("file", pics);
+      data.append("upload_preset", "chat-app");
+      data.append("cloud_name", "eleven-cloud");
+      fetch("https://api.cloudinary.com/v1_1/eleven-cloud/image/upload", {
+        method: "post",
+        body: data,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setPic(data.url.toString());
+          console.log(data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
+    } else {
+      toast({
+        title: "Please select an Image.",
+        // description: "We've created your account for you.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+  };
+  const openNav3 = (title, id) => {
+    setCurrentSlide(title);
+    setCurrentSlideId(id);
+    onDrawerOpen();
   };
 
   function closeNav3() {
@@ -245,6 +296,25 @@ function Map() {
     setMarkers(arr);
   }, [pins]);
 
+  const handleRename = async () => {
+    try {
+      const { data } = await axios.put(`/api/edit/rename`, {
+        chatId: currentSlideId,
+        chatName: pic,
+      });
+
+      console.log(data._id);
+    } catch (error) {
+      toast({
+        title: "Error Occured!",
+        description: error.response.data.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+  };
   return (
     <div className="">
       <Header></Header>
@@ -290,8 +360,7 @@ function Map() {
                 {" "}
                 <SwiperSlide
                   key={index}
-                  // onClick={() => openNav3(p._id)}
-                  onClick={onDrawerOpen}
+                  onClick={() => openNav3(p.title, p._id)}
                 >
                   {({ isActive }) => (
                     <>
@@ -301,7 +370,7 @@ function Map() {
                       ></img>
                       <div class="grid grid-cols-12 gap-3 min-h-full">
                         <div class="col-start-1 col-end-6 ml-3 sm:ml-7">
-                          <div class=" mt-6 ">Football</div>
+                          <div class=" mt-6 ">{p.title}</div>
                           <div class="mt-4">Date:22/11/2022</div>
                         </div>
                         <div class="vl col-start-6 col-end-7 mt-7 "></div>
@@ -493,6 +562,38 @@ function Map() {
             <DrawerOverlay />
             <DrawerContent>
               <DrawerCloseButton />
+              <DrawerHeader>{currentSlide}</DrawerHeader>
+              <DrawerBody>
+                <FormControl id="pic">
+                  <FormLabel>Upload your picture</FormLabel>
+                  <Input
+                    type={"file"}
+                    p={"1.5"}
+                    bg={"gray.50"}
+                    accept="image/*"
+                    onChange={(e) => {
+                      postDetails(e.target.files[0]);
+                    }}
+                  />
+                </FormControl>
+                <Button
+                  width={"100%"}
+                  colorScheme="blue"
+                  style={{ marginTop: "1rem" }}
+                  isLoading={loading}
+                  onClick={handleRename}
+                >
+                  Sign Up
+                </Button>
+                <Button
+                  width={"100%"}
+                  colorScheme="blue"
+                  style={{ marginTop: "1rem" }}
+                  onClick={() => history.push("/image")}
+                >
+                  Photo Template
+                </Button>
+              </DrawerBody>
             </DrawerContent>
           </Drawer>
         </>

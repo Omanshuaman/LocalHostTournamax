@@ -10,6 +10,8 @@ const cors = require("cors");
 const cookieSession = require("cookie-session");
 const authRoute = require("./routes/auth");
 const pinRoute = require("./routes/pins");
+const editRoute = require("./routes/editpics");
+
 const posterRoutes = require("./routes/posterRoutes");
 const session = require("express-session");
 const bodyParser = require("body-parser");
@@ -22,7 +24,11 @@ connectDB();
 const app = express();
 
 app.use(
-  cookieSession({ name: "session", keys: ["lama"], maxAge: 24 * 60 * 60 * 100 })
+  cookieSession({
+    name: "session",
+    keys: ["lama"],
+    maxAge: 30 * 24 * 60 * 60 * 100,
+  })
 );
 
 app.use(passport.initialize());
@@ -45,6 +51,8 @@ app.get("/", (req, res) => {
 
 app.use("/api/user", userRoutes);
 app.use("/api/pins", pinRoute);
+app.use("/api/edit", editRoute);
+
 app.use("/auth", authRoute);
 
 app.use("/api/poster", posterRoutes);
