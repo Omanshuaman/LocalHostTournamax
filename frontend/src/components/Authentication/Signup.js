@@ -17,58 +17,12 @@ const Signup = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmpassword, setConfirmpassword] = useState();
-  const [pic, setPic] = useState();
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const history = useHistory();
 
   const handleClick = () => {
     setShow(!show);
-  };
-
-  const postDetails = (pics) => {
-    setLoading(true);
-    if (pics === undefined) {
-      toast({
-        title: "Please select an Image.",
-        // description: "We've created your account for you.",
-        status: "warning",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom",
-      });
-      return;
-    }
-
-    if (pics.type === "image/jpeg" || pics.type === "image/png") {
-      const data = new FormData();
-      data.append("file", pics);
-      data.append("upload_preset", "chat-app");
-      data.append("cloud_name", "eleven-cloud");
-      fetch("https://api.cloudinary.com/v1_1/eleven-cloud/image/upload", {
-        method: "post",
-        body: data,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setPic(data.url.toString());
-          console.log(data);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          setLoading(false);
-        });
-    } else {
-      toast({
-        title: "Please select an Image.",
-        // description: "We've created your account for you.",
-        status: "warning",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom",
-      });
-    }
   };
 
   const submitHandler = async () => {
@@ -105,7 +59,7 @@ const Signup = () => {
       };
       const { data } = await axios.post(
         "/api/user",
-        { name, email, password, pic },
+        { name, email, password },
         config
       );
       toast({
@@ -189,18 +143,7 @@ const Signup = () => {
           </InputRightElement>
         </InputGroup>
       </FormControl>
-      <FormControl id="pic">
-        <FormLabel>Upload your picture</FormLabel>
-        <Input
-          type={"file"}
-          p={"1.5"}
-          bg={"gray.50"}
-          accept="image/*"
-          onChange={(e) => {
-            postDetails(e.target.files[0]);
-          }}
-        />
-      </FormControl>
+
       <Button
         width={"100%"}
         colorScheme="blue"

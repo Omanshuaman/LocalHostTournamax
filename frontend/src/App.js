@@ -7,6 +7,10 @@ import Card from "./pages/Card";
 import Organize from "./pages/Organaize";
 import FootballOrganize from "./pages/Football";
 import PosterImage from "./pages/Image";
+import MyTournament from "./pages/MyTournament";
+import Participate from "./pages/Participate";
+import Edit from "./pages/Edit";
+import ParticipateRecord from "./pages/ParticipateRecord";
 
 function App() {
   return (
@@ -17,6 +21,10 @@ function App() {
       <Route path="/organize" component={Organize} />
       <Route path="/Football" component={FootballOrganize} />
       <Route path="/image" component={PosterImage} />
+      <Route path="/mytournament" component={MyTournament} />
+      <Route path="/participate" component={Participate} />
+      <Route path="/edit" component={Edit} />
+      <Route path="/participaterecord" component={ParticipateRecord} />
     </div>
   );
 }

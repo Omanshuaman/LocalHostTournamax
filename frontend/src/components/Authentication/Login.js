@@ -25,9 +25,6 @@ const Login = ({ setonClick1 }) => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const history = useHistory();
-  const axiosInstance = axios.create({
-    baseURL: process.env.REACT_APP_API_URL,
-  });
 
   const handleClick = () => {
     setShow(!show);
@@ -54,8 +51,8 @@ const Login = ({ setonClick1 }) => {
         },
       };
 
-      const { data } = await axiosInstance.post(
-        "/user/login",
+      const { data } = await axios.post(
+        "/api/user/login",
         {
           email,
           password,
@@ -92,35 +89,27 @@ const Login = ({ setonClick1 }) => {
   };
 
   const google = async () => {
-    const popup = window.open(
-      "http://localhost:5000/auth/google",
-      "_blank",
-      "height=400,width=450"
-    );
-    if (popup) {
-      popup.onload = async function () {
-        // your code here will run once the popup window has finished loading
-        try {
-          const response = await fetch(
-            "http://localhost:5000/auth/login/success",
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-              },
-              credentials: "include",
-            }
-          );
-          const user = await response.json();
-          localStorage.setItem("userInfo", JSON.stringify(user.user));
-          setUser(user);
-          console.log(user);
-        } catch (error) {
-          console.log("Failed to get user information", error);
-        }
-        popup.close();
-      };
+    window.location.href = "http://localhost:5000/auth/google";
+    try {
+      const response = await fetch("http://localhost:5000/auth/login/success", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        credentials: "include",
+      });
+      if (response.ok) {
+        const user = await response.json();
+        console.log(user);
+        const userInfo = { ...user.user, ...{ token: user.token } };
+        localStorage.setItem("userInfo", JSON.stringify(userInfo));
+        if (!user) setUser(user);
+      } else {
+        console.log("Error in getting user information");
+      }
+    } catch (error) {
+      console.log("Failed to get user information", error);
     }
   };
 
