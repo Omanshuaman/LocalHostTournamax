@@ -11,15 +11,43 @@ const PinSchema = new mongoose.Schema(
       required: true,
     },
     name2: {
-      type: Number,
+      type: String,
       required: true,
     },
     name3: {
-      type: Number,
+      type: String,
       required: true,
     },
     name4: {
-      type: Number,
+      type: String,
+      required: true,
+    },
+    name5: {
+      type: String,
+      required: true,
+    },
+    name6: {
+      type: String,
+      required: true,
+    },
+    name7: {
+      type: String,
+      required: true,
+    },
+    name8: {
+      type: String,
+      required: true,
+    },
+    name9: {
+      type: String,
+      required: true,
+    },
+    name10: {
+      type: String,
+      required: true,
+    },
+    name11: {
+      type: String,
       required: true,
     },
     joinedBy: {

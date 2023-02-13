@@ -21,11 +21,13 @@ function FootballOrganize() {
   const [noOfTeam, setNoOfTeam] = useState(null);
   const [entryFee, setEntryFee] = useState(null);
   const [prizeMoney, setPrizeMoney] = useState(null);
+  const [rules, setRules] = useState(null);
+
   const [pins, setPins] = useState([]);
   const [longitude, setLongitude] = useState("78.656891");
   const [latitude, setLatitude] = useState("22.973423");
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const mapRef = React.useRef();
   const { user } = ChatState();
   const [address, setAddress] = useState(null);
@@ -49,6 +51,7 @@ function FootballOrganize() {
   });
 
   const handleSelect = (ranges) => {
+    console.log(ranges);
     setStartDate(ranges.selection.startDate);
     setEndDate(ranges.selection.endDate);
   };
@@ -78,6 +81,7 @@ function FootballOrganize() {
       address: address,
       startMatchDate: startDate,
       endMatchDate: endDate,
+
       time: time,
       entryFee: entryFee,
       prizeMoney: prizeMoney,
@@ -85,6 +89,7 @@ function FootballOrganize() {
       sports: "Football",
       groupLink: "fdv",
       joinedBy: user._id,
+      rules: rules,
     };
 
     try {
@@ -95,6 +100,37 @@ function FootballOrganize() {
       console.log(err);
     }
   };
+  // const [selectedOption, setSelectedOption] = useState(null);
+
+  // useEffect(() => {
+  //   const optionMenu = document.querySelector(".select-menuu"),
+  //     selectBtn = optionMenu.querySelector(".select-btnu"),
+  //     options = optionMenu.querySelectorAll(".optionu"),
+  //     sBtn_text = optionMenu.querySelector(".sBtn-textu");
+
+  //   function handleSelectBtnClick() {
+  //     optionMenu.classList.toggle("active");
+  //   }
+
+  //   function handleOptionClick(event) {
+  //     const option = event.currentTarget;
+
+  //     optionMenu.classList.remove("active");
+  //   }
+
+  //   selectBtn.addEventListener("click", handleSelectBtnClick);
+
+  //   options.forEach((option) => {
+  //     option.addEventListener("click", handleOptionClick);
+  //   });
+
+  //   return () => {
+  //     selectBtn.removeEventListener("click", handleSelectBtnClick);
+  //     options.forEach((option) => {
+  //       option.removeEventListener("click", handleOptionClick);
+  //     });
+  //   };
+  // });
 
   return (
     <div class="container">
@@ -109,7 +145,28 @@ function FootballOrganize() {
             />
             <label class="input-label">Tournament Name</label>
           </div>
-          <div class="input">
+          {/* <div class="select-menuu">
+            <div class="select-btnu">
+              <span class="sBtn-textu">eg-</span>
+              <i class="bx bx-chevron-down"></i>
+            </div>
+
+            <ul class="optionsu">
+              <li class="optionu">
+                <span class="option-textu">Football</span>
+              </li>
+              <li class="optionu">
+                <span class="option-textu">Cricket</span>
+              </li>
+              <li class="optionu">
+                <span class="option-textu">Badminton</span>
+              </li>
+              <li class="optionu">
+                <span class="option-textu">Hockey</span>
+              </li>
+            </ul>
+          </div> */}
+          <div class="input" style={{ marginTop: "40px" }}>
             <input
               type="text"
               class="input-field"
@@ -210,7 +267,15 @@ function FootballOrganize() {
             />
             <label class="input-label">Prize Money</label>
           </div>
-
+          <div class="input">
+            <input
+              type="number"
+              class="input-field"
+              required
+              onChange={(e) => setRules(e.target.value)}
+            />
+            <label class="input-label">Rules</label>
+          </div>
           <div class="action">
             <button class="action-button" type="submit">
               Done

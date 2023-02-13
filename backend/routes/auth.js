@@ -2,7 +2,7 @@ const router = require("express").Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 
-const CLIENT_URL = "http://localhost:3000/image";
+const CLIENT_URL = "http://localhost:3000/";
 
 router.get("/login/success", generateToken, (req, res) => {
   if (req.user) {

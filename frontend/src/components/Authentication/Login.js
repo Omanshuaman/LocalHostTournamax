@@ -10,7 +10,7 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FcGoogle } from "react-icons/fc";
 
@@ -90,27 +90,6 @@ const Login = ({ setonClick1 }) => {
 
   const google = async () => {
     window.location.href = "http://localhost:5000/auth/google";
-    try {
-      const response = await fetch("http://localhost:5000/auth/login/success", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        credentials: "include",
-      });
-      if (response.ok) {
-        const user = await response.json();
-        console.log(user);
-        const userInfo = { ...user.user, ...{ token: user.token } };
-        localStorage.setItem("userInfo", JSON.stringify(userInfo));
-        if (!user) setUser(user);
-      } else {
-        console.log("Error in getting user information");
-      }
-    } catch (error) {
-      console.log("Failed to get user information", error);
-    }
   };
 
   return (
